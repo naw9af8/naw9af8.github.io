@@ -590,3 +590,23 @@ p {
         text-align: center;
     }
 }
+
+section#MyPhoto {
+    text-align: center;
+    margin-top: 24px;
+    img {
+        max-width: 100%;
+        height: auto;
+        margin-bottom: 12px;
+        border-radius: 18px;
+        border: 1px solid rgba(255, 255, 255, 0.541);
+    }
+    img:hover {
+        transform: scale(1.02);
+        transition: transform 0.25s ease;
+    }
+    img:active {
+        transform: scale(0.98);
+        transition: transform 0.1s ease;
+    }
+}
