@@ -84,27 +84,42 @@ function renderLanguages() {
         .join("");
 }
 
+const CERT_DIR = "./Certificates/";
+
+function getCertPath(file) {
+    return `${CERT_DIR}${encodeURIComponent(file)}`.replace(/%2F/g, "/");
+}
+
 function renderCertificates(certificates) {
-    if (!certificates.length) {
+    const list = Array.isArray(certificates) ? certificates : [];
+
+    if (!list.length) {
         certificatesGrid.innerHTML = "";
         certificatesStatus.textContent = "لا توجد شهادات داخل المجلد بعد.";
         return;
     }
 
-    certificatesGrid.innerHTML = certificates
-        .map((cert) => `
-            <article class="cert-card" tabindex="0" data-cert-title="${cert.title}" data-cert-file="${cert.file}">
-                <img src="Certificates/${cert.file}" alt="${cert.title}">
-                <div class="cert-title">${cert.title}</div>
-            </article>
-        `)
-        .join("");
+    certificatesGrid.innerHTML = list
+        .map((cert) => {
+            const title = cert.title ?? cert.name ?? "شهادة";
+            const file = cert.file ?? cert.image ?? cert.src;
 
+            if (!file) return "";
+
+            return `
+                <article class="cert-card" tabindex="0" data-cert-title="${title}" data-cert-file="${file}">
+                    <img src="${getCertPath(file)}" alt="${title}">
+                    <div class="cert-title">${title}</div>
+                </article>
+            `;
+        })
+        .join("");
 
     certificatesGrid.querySelectorAll(".cert-card").forEach((card) => {
         const openCertificate = () => {
             const title = card.dataset.certTitle;
             const file = card.dataset.certFile;
+
             openModal(`
                 <div class="modal-head">
                     <div>
@@ -112,7 +127,7 @@ function renderCertificates(certificates) {
                         <p>عرض الشهادة بالحجم الكامل</p>
                     </div>
                 </div>
-                <img class="modal-image" src="Certificates/${file}" alt="${title}">
+                <img class="modal-image" src="${getCertPath(file)}" alt="${title}">
             `);
         };
 
@@ -128,14 +143,18 @@ function renderCertificates(certificates) {
 
 async function loadCertificates() {
     try {
-        const response = await fetch("Certificates/certificates.json", { cache: "no-store" });
+        const response = await fetch(`${CERT_DIR}certificates.json`, { cache: "no-store" });
+
         if (!response.ok) {
-            throw new Error("Failed to load certificates.json");
+            throw new Error(`HTTP ${response.status}`);
         }
+
         const certificates = await response.json();
         renderCertificates(certificates);
-    } catch {
-        certificatesStatus.textContent = "ضع ملف Certificates/certificates.json وأضف أسماء ملفات الشهادات فيه.";
+        certificatesStatus.textContent = "";
+    } catch (error) {
+        console.error("Failed to load certificates:", error);
+        certificatesStatus.textContent = "تأكد من وجود Certificates/certificates.json وأن أسماء الملفات داخله صحيحة.";
         certificatesGrid.innerHTML = "";
     }
 }
