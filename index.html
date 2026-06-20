@@ -57,6 +57,7 @@
         <section id="certificates" class="section">
             <div class="section-head">
                 <h2>شهاداتي</h2>
+                <p id="certificatesStatus" class="loading-text">جاري تحميل الشهادات...</p>
             </div>
             <div class="cert-grid" id="certificatesGrid"></div>
         </section>
@@ -66,16 +67,26 @@
             <p>يمكنك مراسلتي عبر واتساب.</p>
             <a class="btn primary" href="https://wa.me/966551763328" target="_blank" rel="noopener">إرسال رسالة</a>
         </section>
+
+        <div class="back-to-top-container">
+            <button id="backToTop" type="button" aria-label="العودة إلى الأعلى">العودة إلى الأعلى</button>
+        </div>
     </main>
 
     <footer class="footer">
-        <p>صنع بواسطة نواف الطلحي</p>
+        <div class="social-links">
+            <p>صنع بواسطة نواف الطلحي</p>
+            <div class="social-buttons">
+                <button type="button" onclick="window.open('https://github.com/naw9af8', '_blank')">GitHub | قيت هب</button>
+                <button type="button" onclick="window.open('https://profile.tuwaiq.edu.sa/naw9af8/public', '_blank')">Satr | سطر</button>
+            </div>
+        </div>
     </footer>
 
-    <div class="modal" id="infoModal" aria-hidden="true">
+    <div id="infoModal" class="modal" aria-hidden="true">
         <div class="modal-backdrop" data-close></div>
         <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-            <button class="modal-close" type="button" data-close>×</button>
+            <button class="modal-close" type="button" aria-label="إغلاق" data-close>×</button>
             <div class="modal-body" id="modalBody"></div>
         </div>
     </div>
