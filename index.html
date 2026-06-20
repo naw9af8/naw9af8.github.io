@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>موقعي الشخصي</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <div class="bg-orb orb-1"></div>
+    <div class="bg-orb orb-2"></div>
+    <div class="bg-orb orb-3"></div>
+
+    <header class="topbar">
+        <nav class="navbar" aria-label="التنقل الرئيسي">
+            <ul class="nav-links">
+                <li><a href="#home" class="active">الرئيسية</a></li>
+                <li><a href="#about">من أنا</a></li>
+                <li><a href="#languages">لغات البرمجة</a></li>
+                <li><a href="#certificates">شهاداتي</a></li>
+                <li><a href="#contact">تواصل معي</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="home" class="hero section">
+            <div class="hero-content">
+                <span class="badge">مرحبًا بك في موقعي الشخصي</span>
+                <h1>مرحبًا، أنا نواف</h1>
+                <p>
+                    هذا موقعي الشخصي، أشارك فيه نبذة عني، لغات البرمجة التي أتعلمها، وشهاداتي.
+                </p>
+                <div class="hero-actions">
+                    <a class="btn primary" href="#about">ابدأ هنا</a>
+                    <a class="btn secondary" href="#certificates">شاهد الشهادات</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="card section">
+            <h2>نبذة عنّي</h2>
+            <h3>أنا نواف الطلحي، عمري 15 سنة، في الصف الثالث المتوسط، من مدينة الطائف.</h3>
+            <h2>الطموحات</h2>
+            <h3>أطمح إلى أن أصبح مبرمجًا، وأن أساهم في نهضة المملكة ورؤيتها الطموحة، وأن أكون مفيدًا في المجتمع.</h3>
+        </section>
+
+        <section id="languages" class="section">
+            <div class="section-head">
+                <h2>لغات البرمجة</h2>
+                <p>اضغط على زر التعرف على أي لغة لعرض معلوماتها.</p>
+            </div>
+            <div class="lang-grid" id="languagesGrid"></div>
+        </section>
+
+        <section id="certificates" class="section">
+            <div class="section-head">
+                <h2>شهاداتي</h2>
+            </div>
+            <div class="cert-grid" id="certificatesGrid"></div>
+        </section>
+
+        <section id="contact" class="card section contact-card">
+            <h2>تواصل معي</h2>
+            <p>يمكنك مراسلتي عبر واتساب.</p>
+            <a class="btn primary" href="https://wa.me/966551763328" target="_blank" rel="noopener">إرسال رسالة</a>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>صنع بواسطة نواف الطلحي</p>
+    </footer>
+
+    <div class="modal" id="infoModal" aria-hidden="true">
+        <div class="modal-backdrop" data-close></div>
+        <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+            <button class="modal-close" type="button" data-close>×</button>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+</body>
+</html>
