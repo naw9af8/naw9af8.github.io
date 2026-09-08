@@ -32,7 +32,7 @@ const languages = [
         wikipedia: "https://simple.wikipedia.org/wiki/Python_(programming_language)"
     },
     {
-        name: "C++",
+        name: "++C",
         image: "cpp.png",
         created: "سنة 1985",
         creator: "بيارن ستروستروب",
