@@ -526,18 +526,24 @@ p {
 }
 
 @keyframes float {
-    0%, 100% {
+
+    0%,
+    100% {
         transform: translate3d(0, 0, 0) scale(1);
     }
+
     50% {
         transform: translate3d(0, -24px, 0) scale(1.05);
     }
 }
 
 @keyframes drift {
-    0%, 100% {
+
+    0%,
+    100% {
         transform: translate3d(0, 0, 0);
     }
+
     50% {
         transform: translate3d(-18px, 18px, 0);
     }
@@ -594,6 +600,7 @@ p {
 section#MyPhoto {
     text-align: center;
     margin-top: 24px;
+
     img {
         max-width: 100%;
         height: auto;
@@ -601,12 +608,198 @@ section#MyPhoto {
         border-radius: 18px;
         border: 1px solid rgba(255, 255, 255, 0.541);
     }
+
     img:hover {
         transform: scale(1.02);
         transition: transform 0.25s ease;
     }
+
     img:active {
         transform: scale(0.98);
         transition: transform 0.1s ease;
+    }
+}
+
+.projects-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    background: rgba(0, 0, 0, 0.55);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0s linear 0.3s;
+}
+
+.projects-overlay.open {
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0s;
+}
+
+.projects-panel {
+    --pp-bg: #111827;
+    --pp-text: #f9fafb;
+    --pp-muted: #9ca3af;
+    --pp-accent: #38bdf8;
+    --pp-border: rgba(255, 255, 255, 0.1);
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 2001;
+    width: min(360px, 88vw);
+    display: flex;
+    flex-direction: column;
+    direction: rtl;
+    background: var(--pp-bg);
+    color: var(--pp-text);
+    box-shadow: 8px 0 32px rgba(0, 0, 0, 0.4);
+    transform: translateX(-100%);
+    visibility: hidden;
+    transition: transform 0.3s ease, visibility 0s linear 0.3s;
+}
+
+.projects-panel.open {
+    transform: translateX(0);
+    visibility: visible;
+    transition-delay: 0s;
+}
+
+.projects-panel,
+.projects-panel * {
+    box-sizing: border-box;
+}
+
+.projects-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--pp-border);
+}
+
+.projects-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.15rem;
+    font-weight: 700;
+}
+
+.projects-count {
+    min-width: 26px;
+    padding: 2px 9px;
+    border-radius: 999px;
+    background: var(--pp-border);
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.projects-count:empty {
+    display: none;
+}
+
+.projects-close {
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    border: 0;
+    border-radius: 10px;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-size: 1.7rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.projects-close:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.projects-status {
+    margin: 0;
+    padding: 20px;
+    color: var(--pp-muted);
+    line-height: 1.8;
+}
+
+.projects-status:empty {
+    display: none;
+}
+
+.projects-list {
+    flex: 1;
+    margin: 0;
+    padding: 12px;
+    list-style: none;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+
+.projects-list li+li {
+    margin-top: 4px;
+}
+
+.project-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 12px;
+    color: inherit;
+    text-decoration: none;
+    transition: background 0.2s ease;
+}
+
+.project-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.projects-close:focus-visible,
+
+.project-item:focus-visible {
+    outline: 2px solid var(--pp-accent);
+    outline-offset: 2px;
+}
+
+.project-icon {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: var(--pp-accent);
+    color: #0b1220;
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.project-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.project-name {
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+.project-desc {
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: var(--pp-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .projects-overlay,
+    .projects-panel {
+        transition: none;
     }
 }
