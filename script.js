@@ -47,6 +47,7 @@ const certificatesStatus = document.getElementById("certificatesStatus");
 const modal = document.getElementById("infoModal");
 const modalBody = document.getElementById("modalBody");
 const backToTop = document.getElementById("backToTop");
+const ProBut = document.getElementById("ProBut");
 
 function openModal(content) {
     modalBody.innerHTML = content;
@@ -148,6 +149,7 @@ document.addEventListener("click", (e) => {
 document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") {
         closeModal();
+        closeProjects();
     }
 });
 
@@ -171,6 +173,163 @@ sections.forEach((section) => observer.observe(section));
 backToTop.addEventListener("click", () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
 });
+
+/* ===== قائمة المشاريع الجانبية (تنفتح من زر ProBut) ===== */
+
+const projectsDir = "Projects";
+let projectsLoaded = false;
+let projectsLoading = false;
+
+const projectsOverlay = document.createElement("div");
+projectsOverlay.className = "projects-overlay";
+
+const projectsPanel = document.createElement("aside");
+projectsPanel.id = "projectsPanel";
+projectsPanel.className = "projects-panel";
+projectsPanel.setAttribute("aria-label", "مشاريعي");
+projectsPanel.innerHTML = `
+    <div class="projects-head">
+        <div class="projects-title" role="heading" aria-level="2">
+            <span>مشاريعي</span>
+            <span class="projects-count"></span>
+        </div>
+        <button type="button" class="projects-close" aria-label="إغلاق القائمة">&times;</button>
+    </div>
+    <p class="projects-status" role="status"></p>
+    <ul class="projects-list"></ul>
+`;
+
+document.body.append(projectsOverlay, projectsPanel);
+
+const projectsClose = projectsPanel.querySelector(".projects-close");
+const projectsCount = projectsPanel.querySelector(".projects-count");
+const projectsStatus = projectsPanel.querySelector(".projects-status");
+const projectsList = projectsPanel.querySelector(".projects-list");
+
+function normalizeProject(item) {
+    const data = typeof item === "string" ? { folder: item } : item;
+    if (!data || !data.folder) return null;
+
+    const folder = String(data.folder).trim().replace(/^\/+|\/+$/g, "");
+    if (!folder) return null;
+
+    return {
+        title: String(data.title || "").trim() || folder,
+        description: data.description ? String(data.description) : "",
+        url: `${projectsDir}/${folder.split("/").map(encodeURIComponent).join("/")}/index.html`
+    };
+}
+
+function renderProjects(projects) {
+    projectsList.innerHTML = "";
+    projectsCount.textContent = projects.length || "";
+
+    if (!projects.length) {
+        projectsStatus.textContent = "لا توجد مشاريع داخل المجلد بعد.";
+        return;
+    }
+
+    projectsStatus.textContent = "";
+
+    projects.forEach((project) => {
+        const item = document.createElement("li");
+
+        const link = document.createElement("a");
+        link.className = "project-item";
+        link.href = project.url;
+        link.target = "_blank";
+        link.rel = "noopener";
+
+        const icon = document.createElement("span");
+        icon.className = "project-icon";
+        icon.textContent = [...project.title][0].toUpperCase();
+
+
+        const text = document.createElement("span");
+        text.className = "project-text";
+
+        const name = document.createElement("span");
+        name.className = "project-name";
+        name.textContent = project.title;
+        text.append(name);
+
+        if (project.description) {
+            const desc = document.createElement("span");
+            desc.className = "project-desc";
+            desc.textContent = project.description;
+            text.append(desc);
+        }
+
+        link.append(icon, text);
+        item.append(link);
+        projectsList.append(item);
+    });
+}
+
+async function loadProjects() {
+    if (projectsLoading) return;
+    projectsLoading = true;
+
+    projectsList.innerHTML = "";
+    projectsCount.textContent = "";
+    projectsStatus.textContent = "جاري تحميل المشاريع...";
+
+    try {
+        const response = await fetch(`${projectsDir}/projects.json`, { cache: "no-store" });
+        if (!response.ok) throw new Error("Failed to load projects.json");
+        const data = await response.json();
+        renderProjects(Array.isArray(data) ? data.map(normalizeProject).filter(Boolean) : []);
+        projectsLoaded = true;
+    } catch (error) {
+        projectsStatus.textContent = error instanceof SyntaxError
+            ? "ملف projects.json فيه خطأ في الصيغة، راجع الفواصل والأقواس."
+            : "ضع ملف Projects/projects.json وأضف أسماء مجلدات المشاريع فيه.";
+    } finally {
+        projectsLoading = false;
+    }
+}
+
+function openProjects() {
+    projectsPanel.classList.add("open");
+    projectsOverlay.classList.add("open");
+    ProBut?.setAttribute("aria-expanded", "true");
+    if (!projectsLoaded) loadProjects();
+    projectsClose.focus();
+}
+
+function closeProjects() {
+    if (!projectsPanel.classList.contains("open")) return;
+    projectsPanel.classList.remove("open");
+    projectsOverlay.classList.remove("open");
+    ProBut?.setAttribute("aria-expanded", "false");
+    ProBut?.focus();
+}
+
+if (ProBut) {
+    ProBut.setAttribute("aria-controls", "projectsPanel");
+    ProBut.setAttribute("aria-expanded", "false");
+
+    // لو الزر مو <button> ولا رابط، نخليه يشتغل بالكيبورد برضو
+    if (!ProBut.matches("button, a[href], input")) {
+        ProBut.setAttribute("role", "button");
+        ProBut.tabIndex = 0;
+        ProBut.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                ProBut.click();
+            }
+        });
+    }
+
+    ProBut.addEventListener("click", (e) => {
+        e.preventDefault();
+        if (projectsPanel.classList.contains("open")) closeProjects();
+        else openProjects();
+    });
+}
+
+projectsOverlay.addEventListener("click", closeProjects);
+projectsClose.addEventListener("click", closeProjects);
 
 renderLanguages();
 loadCertificates();
